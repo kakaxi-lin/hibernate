@@ -10,8 +10,15 @@
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">fendou</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/tx</property>
+        <property name="hibernate.connection.url">jdbc:mysql://130.10.7.122:3306/tx</property>
         <property name="show_sql">true</property>
-        <property name="hbm2ddl.auto">update</property>
+        <!-- 格式化sql语句 -->
+        <!-- <property name="format_sql">true</property> -->
+        <!-- 不用改为create 容易出现数据库表丢失 -->
+        <!--  <property name="hbm2ddl.auto">update</property> -->
+         <!-- 指定映射文件的路径 -->
+         <mapping resource="yk/po/Kai.hbm.xml"/>
     </session-factory>
+   
+    
 </hibernate-configuration>

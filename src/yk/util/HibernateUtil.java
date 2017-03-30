@@ -1,4 +1,4 @@
-package com.yk.util;
+package yk.util;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -34,6 +34,12 @@ public class HibernateUtil {
 	public static void closeSession(Session session){
 		if(session!=null){
 			session.close();
+		}
+	}
+	//¹Ø±ÕSessionFactory
+	public static void closeSessionFactory(SessionFactory sessionFactory){
+		if(sessionFactory!=null){
+			sessionFactory.close();
 		}
 	}
 
