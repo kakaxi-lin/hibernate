@@ -127,6 +127,16 @@ public class KaiDao {
 		HibernateUtil.closeSession(session);
 		HibernateUtil.closeSessionFactory(sessionFactory);
 	}
+	//获取总条数 
+	public void HQL_count() {
+		Session session = HibernateUtil.getSession();
+		Query query = session.createQuery("select count(id) from Kai where id between 1 and 3 ");
+		//uniqueResult 数字结果返回的是Long类型/也可返回唯一的对象值
+		long count = (Long) query.uniqueResult();
+		System.out.println(count);
+		HibernateUtil.closeSession(session);
+		HibernateUtil.closeSessionFactory(sessionFactory);
+	}
 	
 	public static void main(String[] args) {
 		// new KaiDao().add();
@@ -135,6 +145,7 @@ public class KaiDao {
 //		new KaiDao().delete();
 //		new KaiDao().HQL_query();
 //		new KaiDao().HQL_fenye();
-		new KaiDao().HQL_selectObject();
+//		new KaiDao().HQL_selectObject();
+		new KaiDao().HQL_count();
 	}
 }
