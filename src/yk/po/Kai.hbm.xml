@@ -3,7 +3,7 @@
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated Nov 9, 2006 6:27:53 PM by Hibernate Tools 3.2.0.beta7 -->
 <hibernate-mapping>
-	<class name="yk.po.Kai" table="kai">
+	<class name="yk.po.Kai" table="kai" >
 		<id name="id" column="id" type="java.lang.Integer">
 			<generator class="increment"></generator>
 		</id>
