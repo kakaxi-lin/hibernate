@@ -1,12 +1,13 @@
 package yk.dao;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-
 import yk.po.Kai;
 import yk.util.HibernateUtil;
 
@@ -137,8 +138,27 @@ public class KaiDao {
 		HibernateUtil.closeSession(session);
 		HibernateUtil.closeSessionFactory(sessionFactory);
 	}
-	
+	//SQL原生查询
+	public void SQL_select(){
+		Session session = HibernateUtil.getSession();
+		
+		//1.当查询的字段不属于具体类时，可以用Object []接收
+		/*SQLQuery c = session.createSQLQuery("select k.id ,k.name,t.id xx, t.name ame  from kai k  join tx t on k.id=t.id ");
+		List<Object []> list=c.list();
+		for (Object[] o : list) {
+			System.out.println(o[0]+">"+o[1]+">"+o[2]+">"+o[3]);
+		}*/
+		//2.当查询的字段对应具体类时，可以增加实体类
+		Query c = session.createSQLQuery("select id ,name from kai where id between ? and ?").addEntity(Kai.class).setInteger(0, 3).setInteger(1, 5);
+		List<Kai> list=c.list();
+		for (Kai k : list) {
+			System.out.println(k);
+		}
+		HibernateUtil.closeSession(session);
+		HibernateUtil.closeSessionFactory(sessionFactory);
+	}
 	public static void main(String[] args) {
+		
 		// new KaiDao().add();
 //		 new KaiDao().query();
 		// new KaiDao().update();
@@ -146,6 +166,6 @@ public class KaiDao {
 //		new KaiDao().HQL_query();
 //		new KaiDao().HQL_fenye();
 //		new KaiDao().HQL_selectObject();
-		new KaiDao().HQL_count();
+		new KaiDao().SQL_select();
 	}
 }
