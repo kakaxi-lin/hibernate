@@ -11,6 +11,7 @@
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">fendou</property>
         <property name="hibernate.connection.url">jdbc:mysql://130.10.7.122:3306/tx</property>
+        <property name="current_session_context_class">thread</property>
         <property name="show_sql">true</property>
         <!-- 格式化sql语句 -->
         <!-- <property name="format_sql">true</property> -->

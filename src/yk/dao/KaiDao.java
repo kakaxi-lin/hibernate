@@ -29,18 +29,21 @@ public class KaiDao {
 		session.save(k);
 		// 提交事务
 		tx.commit();
-		HibernateUtil.closeSession(session);
+		//用getCurrentSession()不用关闭session,事务提交完成时自动关闭
+//		HibernateUtil.closeSession(session);
 		HibernateUtil.closeSessionFactory(sessionFactory);
 
 	}
 
 	public void query() {
 		Session session = HibernateUtil.getSession();
-//		Kai kai = (Kai) session.get(Kai.class, 3);
+		session.beginTransaction();
+		Kai kai = (Kai) session.get(Kai.class, 3);
 //		4.3版本 使用load会保存转换类型的错误 要把配置文件中 lazy=false
-		Kai kai = (Kai) session.load(Kai.class, 3);
+//		Kai kai = (Kai) session.load(Kai.class, 3);
 		System.out.println(kai);
-		HibernateUtil.closeSession(session);
+		session.getTransaction().commit();
+//		HibernateUtil.closeSession(session);
 		HibernateUtil.closeSessionFactory(sessionFactory);
 	}
 
@@ -57,7 +60,7 @@ public class KaiDao {
 		session.update(kai);
 		// 提交事务
 		tx.commit();
-		HibernateUtil.closeSession(session);
+//		HibernateUtil.closeSession(session);
 		HibernateUtil.closeSessionFactory(sessionFactory);
 	}
 
@@ -72,13 +75,13 @@ public class KaiDao {
 		session.delete(kai);
 		// 提交事务
 		tx.commit();
-		HibernateUtil.closeSession(session);
+//		HibernateUtil.closeSession(session);
 		HibernateUtil.closeSessionFactory(sessionFactory);
 	}
 	
 	public void HQL_query() {
 		Session session = HibernateUtil.getSession();
-		// 除get查询外，都需要开启事务
+		// 除getCurrentSession()获得session查询，都需要开启事务
 		//一 :是占位符
 //		Query query = session.createQuery("from Kai where id= :c").setInteger("c", 5);
 //		1.使用setParameter
@@ -87,17 +90,20 @@ public class KaiDao {
 //		链式编程
 //		二 ？占位符
 //		Hibernate是从0开始，JDBC是从1开始
+		Transaction tx = session.beginTransaction();
 		Query query = session.createQuery("from Kai where id= ?").setInteger(0, 5);
 		List<Kai> list = (List<Kai>)query.list();
 		for(Kai k:list){
 			System.out.println(k);
 		}
-		HibernateUtil.closeSession(session);
+		tx.commit();
+//		HibernateUtil.closeSession(session);
 		HibernateUtil.closeSessionFactory(sessionFactory);
 	}
 	//分页
 	public void HQL_fenye() {
 		Session session = HibernateUtil.getSession();
+		Transaction tx = session.beginTransaction();
 		Query query = session.createQuery("from Kai order by id desc");
 		//查询最大条数
 		query.setMaxResults(3);
@@ -107,7 +113,8 @@ public class KaiDao {
 		for(Kai k:list){
 			System.out.println(k);
 		}
-		HibernateUtil.closeSession(session);
+		tx.commit();
+//		HibernateUtil.closeSession(session);
 		HibernateUtil.closeSessionFactory(sessionFactory);
 	}
 	//只取其中几个属性
@@ -119,29 +126,33 @@ public class KaiDao {
 //		for(Object o:list){
 //			System.out.println(o);
 //		}
+		Transaction tx = session.beginTransaction();
 		//2.如果查询字段多与一个，则用List<Object []>
 		Query query = session.createQuery("select id,name from Kai k ");
 		List<Object []> list = (List<Object []>)query.list();
 		for(Object [] o:list){
 			System.out.println(o[0]+">"+o[1]);
 		}
-		HibernateUtil.closeSession(session);
+		tx.commit();
+//		HibernateUtil.closeSession(session);
 		HibernateUtil.closeSessionFactory(sessionFactory);
 	}
 	//获取总条数 
 	public void HQL_count() {
 		Session session = HibernateUtil.getSession();
+		Transaction tx = session.beginTransaction();
 		Query query = session.createQuery("select count(id) from Kai where id between 1 and 3 ");
 		//uniqueResult 数字结果返回的是Long类型/也可返回唯一的对象值
 		long count = (Long) query.uniqueResult();
+		tx.commit();
 		System.out.println(count);
-		HibernateUtil.closeSession(session);
+//		HibernateUtil.closeSession(session);
 		HibernateUtil.closeSessionFactory(sessionFactory);
 	}
 	//SQL原生查询
 	public void SQL_select(){
 		Session session = HibernateUtil.getSession();
-		
+		Transaction tx = session.beginTransaction();
 		//1.当查询的字段不属于具体类时，可以用Object []接收
 		/*SQLQuery c = session.createSQLQuery("select k.id ,k.name,t.id xx, t.name ame  from kai k  join tx t on k.id=t.id ");
 		List<Object []> list=c.list();
@@ -154,12 +165,13 @@ public class KaiDao {
 		for (Kai k : list) {
 			System.out.println(k);
 		}
-		HibernateUtil.closeSession(session);
+		tx.commit();
+//		HibernateUtil.closeSession(session);
 		HibernateUtil.closeSessionFactory(sessionFactory);
 	}
 	public static void main(String[] args) {
 		
-		// new KaiDao().add();
+//		 new KaiDao().add();
 //		 new KaiDao().query();
 		// new KaiDao().update();
 //		new KaiDao().delete();
@@ -167,5 +179,6 @@ public class KaiDao {
 //		new KaiDao().HQL_fenye();
 //		new KaiDao().HQL_selectObject();
 		new KaiDao().SQL_select();
+//		new KaiDao().HQL_count();
 	}
 }
